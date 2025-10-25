@@ -1,0 +1,14 @@
+{
+  "name": "gestion-students-frontend",
+  "version": "1.0.0",
+  "description": "Frontend personalizado para GestionStudents - André Santiago",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.0"
+  },
+  "author": "André Santiago",
+  "license": "MIT"
+}

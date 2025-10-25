@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de gestión de estudiantes con arquitectura de microservicios">
+    <meta name="author" content="André Santiago">
+    <title>GestionStudents - Sistema de Gestión de Estudiantes</title>
+    
+    <!-- Styles - rutas actualizadas -->
+    <link rel="stylesheet" href="../public/css/styles.css">
+    <link rel="stylesheet" href="../public/css/components.css">
+    <link rel="icon" type="image/x-icon" href="../public/assets/favicon.ico">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <h1>🎓 Sistema de Gestión de Estudiantes</h1>
+            <div class="system-info">
+                <span class="badge">
+                    <span class="badge-icon">👨‍💻</span>
+                    <span class="badge-text" id="authorName">André Santiago</span>
+                </span>
+                <span class="badge badge-tech">
+                    <span class="badge-icon">🔧</span>
+                    <span class="badge-text">HTML + JS + Node.js + MySQL</span>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Action Buttons -->
+            <div class="actions-bar">
+                <button class="btn btn-primary" id="btnNewStudent">
+                    ➕ Nuevo Estudiante
+                </button>
+                <button class="btn btn-secondary" id="btnRefresh">
+                    🔄 Actualizar
+                </button>
+            </div>
+
+            <!-- Student Form (Initially Hidden) -->
+            <div id="studentFormContainer" class="form-card" style="display: none;">
+                <h2 id="formTitle">➕ Nuevo Estudiante</h2>
+                <form id="studentForm">
+                    <div class="form-group">
+                        <label for="name">Nombre completo *</label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name" 
+                            placeholder="Ej: Juan García Pérez"
+                            required
+                            minlength="3"
+                            maxlength="100"
+                        />
+                        <div class="error-message" id="nameError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="estudiante@universidad.edu"
+                            required
+                        />
+                        <div class="error-message" id="emailError"></div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="birth_date">Fecha de Nacimiento *</label>
+                            <input 
+                                type="date" 
+                                id="birth_date" 
+                                name="birth_date" 
+                                required
+                            />
+                            <div class="error-message" id="birthDateError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="career">Carrera</label>
+                            <input 
+                                type="text" 
+                                id="career" 
+                                name="career" 
+                                placeholder="Ingeniería en Sistemas"
+                                maxlength="100"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success" id="btnSubmit">
+                            ➕ Crear
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="btnCancel">
+                            ✕ Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingContainer" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Cargando estudiantes...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="errorContainer" class="error-card" style="display: none;">
+                <span class="error-icon">⚠️</span>
+                <p id="errorMessage"></p>
+                <button class="btn btn-secondary" id="btnRetry">🔄 Reintentar</button>
+            </div>
+
+            <!-- Students Grid -->
+            <div id="studentsGrid" class="students-grid">
+                <!-- Stats Card -->
+                <div class="stats-card">
+                    <h3>📊 Estadísticas</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Total de estudiantes:</span>
+                        <span class="stat-value" id="totalStudents">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Edad promedio:</span>
+                        <span class="stat-value" id="avgAge">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Base de datos:</span>
+                        <span class="stat-value">students_db_AndreSantiago</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Container:</span>
+                        <span class="stat-value">frontend-container-AndreSantiago</span>
+                    </div>
+                </div>
+
+                <!-- Student cards will be inserted here dynamically -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <span class="empty-icon">📚</span>
+                <h3>No hay estudiantes registrados</h3>
+                <p>Comienza agregando un nuevo estudiante</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>Sistema de Microservicios con Docker - Desarrollado por André Santiago</p>
+        <p>Backend: backend-container-AndreSantiago | Database: database-container-AndreSantiago</p>
+    </footer>
+
+    <!-- Scripts - rutas actualizadas -->
+    <script src="../public/js/config/config.js"></script>
+    <script src="../public/js/utils/helpers.js"></script>
+    <script src="../public/js/services/studentService.js"></script>
+    <script src="../public/js/components/studentList.js"></script>
+    <script src="../public/js/components/studentForm.js"></script>
+    <script src="../public/js/app.js"></script>
+</body>
+</html>

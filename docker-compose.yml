@@ -1,0 +1,99 @@
+version: '3.8'
+
+services:
+  # Frontend Service - HTML + JavaScript
+  frontend-AndreSantiago:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend-container-AndreSantiago
+    ports:
+      - "80:80"
+    environment:
+      - API_URL=http://54.160.112.30:5000
+    env_file:
+      - ./frontend/.env
+    networks:
+      - network-AndreSantiago
+    depends_on:
+      - backend-AndreSantiago
+    restart: unless-stopped
+    labels:
+      - "project=gestionstudents"
+      - "tier=frontend"
+      - "author=AndreSantiago"
+
+  # Backend API Service - Node.js
+  backend-AndreSantiago:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend-container-AndreSantiago
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=database-AndreSantiago
+      - DB_PORT=3306
+    networks:
+      - network-AndreSantiago
+    depends_on:
+      database-AndreSantiago:
+        condition: service_healthy
+    restart: unless-stopped
+    labels:
+      - "project=gestionstudents"
+      - "tier=backend"
+      - "author=AndreSantiago"
+    healthcheck:
+      test: ["CMD", "node", "/app/src/utils/healthcheck.js"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # MySQL Database Service
+  database-AndreSantiago:
+    image: mysql:8.0
+    container_name: database-container-AndreSantiago
+    ports:
+      - "3306:3306"
+    env_file:
+      - ./database/.env
+    volumes:
+      - mysql-data-AndreSantiago:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - network-AndreSantiago
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    labels:
+      - "project=gestionstudents"
+      - "tier=database"
+      - "author=AndreSantiago"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+# Named volumes for persistence
+volumes:
+  mysql-data-AndreSantiago:
+    driver: local
+    name: mysql-volume-AndreSantiago
+    labels:
+      - "project=gestionstudents"
+      - "author=AndreSantiago"
+
+# Custom network
+networks:
+  network-AndreSantiago:
+    driver: bridge
+    name: students-network-AndreSantiago
+    labels:
+      - "project=gestionstudents"
+      - "author=AndreSantiago"
